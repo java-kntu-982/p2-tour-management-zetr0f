@@ -1,6 +1,6 @@
 package ir.ac.kntu;
 
-import ir.ac.kntu.maputil.MapUtil;
+//import ir.ac.kntu.maputil.MapUtil;
 
 public class Main {
 

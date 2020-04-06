@@ -1,4 +1,5 @@
 package ir.ac.kntu.area;
 
-public class area {
+
+public class Area {
 }
