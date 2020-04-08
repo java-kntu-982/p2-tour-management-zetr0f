@@ -2,9 +2,7 @@ package ir.ac.kntu.tourleader;
 
 
 import ir.ac.kntu.area.Area;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -25,6 +23,17 @@ public class TourLeader {
         setDateOfRecruitment(new Date(dateOfRecruitment));
         setMaritalStatus(maritalStatus);
         setAreas(new ArrayList<>(areas));
+    }
+
+    public TourLeader(TourLeader tourLeader) {
+        this.id = tourLeader.id;
+        this.firstName = tourLeader.getFirstName();
+        this.lastName = tourLeader.getLastName();
+        this.dateOfBirth = tourLeader.getDateOfBirth();
+        this.dateOfRecruitment = tourLeader.getDateOfRecruitment();
+        this.areas = tourLeader.getAreas();
+        this.maritalStatus = tourLeader.getMaritalStatus();
+
     }
 
     public String getId() {
@@ -94,8 +103,12 @@ public class TourLeader {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         TourLeader that = (TourLeader) o;
         return Objects.equals(getId(), that.getId());
     }
