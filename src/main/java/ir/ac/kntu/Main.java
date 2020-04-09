@@ -6,6 +6,6 @@ import ir.ac.kntu.userinterface.UserInterface;
 public class Main {
 
     public static void main(String[] args) {
-        UserInterface.handlerForMainMenu();1
+        UserInterface.handlerForMainMenu();
     }
 }

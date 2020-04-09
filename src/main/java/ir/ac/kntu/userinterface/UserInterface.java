@@ -9,14 +9,15 @@ import ir.ac.kntu.tourleader.Date;
 import ir.ac.kntu.tourleader.TourLeader;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 
 public class UserInterface {
     public static Date today = new Date(1399 , 1, 21  );
-    private static ArrayList<Area> areas;
-    private static ArrayList<TourLeader> tourLeaders;
-    private static ArrayList<TourInformation> primaryStructures;
-    private static ArrayList<Tour> tours;
+    private static ArrayList<Area> areas  = new ArrayList<>();
+    private static ArrayList<TourLeader> tourLeaders = new ArrayList<>();
+    private static ArrayList<TourInformation> primaryStructures = new ArrayList<>();
+    private static ArrayList<Tour> tours = new ArrayList<>();
     private static ScannerSingleton input = ScannerSingleton.getInstance();
 
     private UserInterface() {
@@ -38,7 +39,7 @@ public class UserInterface {
     }
 
     private static void handlerForMainMenuChoice() {
-        String choice = input.toString();
+        String choice = input.nextLine();
         switch (choice) {
             case "1":
                 handlerForTourLeaderMenu();
@@ -83,7 +84,7 @@ public class UserInterface {
     }
 
     private static void handlerForTourLeaderMenuChoice() {
-        String choice = input.toString();
+        String choice = input.nextLine();
         clearScreen();
         switch (choice) {
             case "1":
@@ -256,7 +257,7 @@ public class UserInterface {
     }
 
     private static void handlerForSearchLeaderMenuChoice() {
-        String choice = input.toString();
+        String choice = input.nextLine();
         clearScreen();
         switch (choice) {
             case "1":
@@ -318,7 +319,7 @@ public class UserInterface {
     }
 
     private static void handlerSearchByTourLeaderAgeChoice() {
-        String choice = input.toString();
+        String choice = input.nextLine();
         clearScreen();
         int min,max;
         switch (choice) {
@@ -462,7 +463,7 @@ public class UserInterface {
     }
 
     private static void handlerForSearchPrimaryStructuresMenuChoice() {
-        String choice = input.toString();
+        String choice = input.nextLine();
         clearScreen();
         switch (choice) {
             case "1":
@@ -534,7 +535,7 @@ public class UserInterface {
     }
 
     private static void handlerSearchByPrimaryStructuresPriceChoice() {
-        String choice = input.toString();
+        String choice = input.nextLine();
         clearScreen();
         double min , max;
         switch (choice) {
@@ -602,7 +603,7 @@ public class UserInterface {
     }
 
     private static void handlerForSearchTourMenuChoice() {
-        String choice = input.toString();
+        String choice = input.nextLine();
         clearScreen();
         switch (choice) {
             case "1"://TODO
@@ -635,8 +636,8 @@ public class UserInterface {
                 pause();
                 handlerForSearchToursMenu();
         }
-//        pause();
-//        handlerForSearchToursMenu();
+        pause();
+        handlerForSearchToursMenu();
     }
 
     private static void handlerSearchByTourBeginDate() {
@@ -655,7 +656,7 @@ public class UserInterface {
     }
 
     private static void handlerSearchByTourBeginDateChoice() {
-        String choice = input.toString();
+        String choice = input.nextLine();
         clearScreen();
         switch (choice) {
             case "1"://TODO
@@ -678,8 +679,8 @@ public class UserInterface {
                 pause();
                 handlerSearchByTourBeginDate();
         }
-//        pause();
-//        handlerSearchByTourBeginDate();
+        pause();
+        handlerSearchByTourBeginDate();
     }
 
     private static void handlerSearchByTourPrice() {
@@ -699,7 +700,7 @@ public class UserInterface {
     }
 
     private static void handlerSearchByTourPriceChoice() {
-        String choice = input.toString();
+        String choice = input.nextLine();
         clearScreen();
         switch (choice) {
             case "1"://TODO
@@ -724,8 +725,8 @@ public class UserInterface {
                 pause();
                 handlerSearchByTourPrice();
         }
-//        pause();
-//        handlerSearchByTourPrice();
+        pause();
+        handlerSearchByTourPrice();
     }
 
     private static void handlerForAreaMenu() {
@@ -745,7 +746,7 @@ public class UserInterface {
     }
 
     private static void handlerForAreaMenuChoice() {
-        String choice = input.toString();
+        String choice = input.nextLine();
         clearScreen();
         String name,capital;
         switch (choice) {
@@ -810,7 +811,7 @@ public class UserInterface {
     }
 
     private static void handlerForMapMenuChoice() {
-        String choice = input.toString();
+        String choice = input.nextLine();
         clearScreen();
         String city1,city2;
         switch (choice) {
@@ -857,6 +858,7 @@ public class UserInterface {
 
     private static void pause() {
         System.out.println("press enter to continue ...");
-        input.nextLine();
+        Scanner scanner = new Scanner(System.in);
+        scanner.nextLine();
     }
 }

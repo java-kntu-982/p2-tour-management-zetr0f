@@ -9,9 +9,9 @@ import java.util.Objects;
 
 public class Tour {
     private static int idHelper;
-    private TourInformation tourInformation;
-    private Date begin;
-    private TourLeader tourLeader;
+    private TourInformation tourInformation = new TourInformation();
+    private Date begin = new Date();
+    private TourLeader tourLeader = new TourLeader();
     private String id;
 
     public Tour() {

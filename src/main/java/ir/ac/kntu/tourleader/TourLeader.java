@@ -12,10 +12,10 @@ public class TourLeader {
     private String id;
     private String firstName;
     private String lastName;
-    private Date dateOfBirth;
-    private Date dateOfRecruitment;
+    private Date dateOfBirth = new Date();
+    private Date dateOfRecruitment = new Date();
     private Boolean maritalStatus;
-    private ArrayList<Area> areas;
+    private ArrayList<Area> areas = new ArrayList<>();
 
     public TourLeader(){
     }
