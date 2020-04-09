@@ -2,6 +2,8 @@ package ir.ac.kntu.tourleader;
 
 
 import ir.ac.kntu.area.Area;
+import ir.ac.kntu.userinterface.UserInterface;
+
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -14,6 +16,9 @@ public class TourLeader {
     private Date dateOfRecruitment;
     private Boolean maritalStatus;
     private ArrayList<Area> areas;
+
+    public TourLeader(){
+    }
 
     public TourLeader(String id, String firstName, String lastName, Date dateOfBirth, Date dateOfRecruitment, Boolean maritalStatus, ArrayList<Area> areas) {
         setId(id);
@@ -61,7 +66,7 @@ public class TourLeader {
     }
 
     public ArrayList<Area> getAreas() {
-        return new ArrayList<Area>(areas);
+        return areas;
     }
 
     public void setId(String id) {//must 10 length
@@ -86,11 +91,18 @@ public class TourLeader {
     }
 
     public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+        if (dateOfBirth == null) {
+            dateOfBirth = new Date(0,1,1);
+        }
+        if (dateOfRecruitment.getYear() - 18 >= dateOfBirth.getYear()) {
+            this.dateOfBirth = dateOfBirth;
+        }
     }
 
     public void setDateOfRecruitment(Date dateOfRecruitment) {
-        this.dateOfRecruitment = dateOfRecruitment;
+        if (dateOfBirth.getYear() + 18 <= dateOfRecruitment.getYear()) {
+            this.dateOfRecruitment = dateOfRecruitment;
+        }
     }
 
     public void setMaritalStatus(Boolean maritalStatus) {
@@ -101,6 +113,61 @@ public class TourLeader {
         this.areas = areas;
     }
 
+    public static ArrayList<TourLeader> searchByFirstName(ArrayList<TourLeader> tourLeaders , String firstName) {
+        if (firstName == null || tourLeaders.isEmpty()) {
+            return null;
+        }
+        ArrayList<TourLeader> ans = new ArrayList<>();
+        for (TourLeader tourLeader : tourLeaders) {
+            if (tourLeader.getFirstName().equals(firstName)) {
+                ans.add(tourLeader);
+            }
+        }
+        return ans;
+    }
+
+    public static ArrayList<TourLeader> searchByLastName(ArrayList<TourLeader> tourLeaders , String lastName) {
+        if (lastName == null || tourLeaders.isEmpty()) {
+            return null;
+        }
+        ArrayList<TourLeader> ans = new ArrayList<>();
+        for (TourLeader tourLeader : tourLeaders) {
+            if (tourLeader.getFirstName().equals(lastName)) {
+                ans.add(tourLeader);
+            }
+        }
+        return ans;
+    }
+
+    public static ArrayList<TourLeader> searchByArea(ArrayList<TourLeader> tourLeaders , Area area) {
+        if (area == null || tourLeaders.isEmpty()) {
+            return null;
+        }
+        ArrayList<TourLeader> ans = new ArrayList<>();
+        for (TourLeader tourLeader : tourLeaders) {
+            if (!tourLeader.getAreas().isEmpty() && tourLeader.getAreas().contains(area)) {
+                ans.add(tourLeader);
+            }
+        }
+        return ans;
+    }
+
+    public static ArrayList<TourLeader> searchByAge(ArrayList<TourLeader> tourLeaders , int min , int max) {//max maximum is 117
+        if (tourLeaders.isEmpty()) {
+            return null;
+        }
+        ArrayList<TourLeader> ans = new ArrayList<>();
+        for (TourLeader tourLeader : tourLeaders) {
+            if (tourLeader.calculateAge() < max && tourLeader.calculateAge() > min) {
+                ans.add(tourLeader);
+            }
+        }
+        return ans;
+    }
+
+    private int calculateAge(){
+        return UserInterface.today.getYear() - dateOfBirth.getYear();
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) {

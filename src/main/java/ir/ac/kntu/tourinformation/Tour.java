@@ -1,8 +1,10 @@
 package ir.ac.kntu.tourinformation;
 
+import ir.ac.kntu.area.Area;
+import ir.ac.kntu.tourleader.Date;
 import ir.ac.kntu.tourleader.TourLeader;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Tour {
@@ -11,6 +13,10 @@ public class Tour {
     private Date begin;
     private TourLeader tourLeader;
     private String id;
+
+    public Tour() {
+
+    }
 
     public Tour(Tour tour) {
         this.tourInformation = tour.tourInformation;
@@ -56,6 +62,101 @@ public class Tour {
 
     public static int getIdHelper() {
         return idHelper;
+    }
+
+    public static ArrayList<Tour> searchByLeader(ArrayList<Tour> tours , TourLeader leader) {
+        if (tours == null || tours.isEmpty() || leader == null) {
+            return null;
+        }
+        ArrayList<Tour> ans = new ArrayList<>();
+        for (Tour tour : tours) {
+            if (tour.getTourLeader().equals(leader)) {
+                ans.add(tour);
+            }
+        }
+        return ans;
+    }
+
+    public static ArrayList<Tour> searchByDate(ArrayList<Tour> tours , Date begin , Date end) {
+        if (tours == null || tours.isEmpty()) {
+            return null;
+        }
+        ArrayList<Tour> ans = new ArrayList<>();
+        for (Tour tour : tours) {
+            Date endOfTour = new Date(tour.getBegin());
+            for (int i = 0; i < tour.getTourInformation().getTimeOfTour() - 1 ; i++) {
+                endOfTour = endOfTour.nextDay();
+            }
+            if ((tour.getBegin().compareTo(begin) >= 0) && (endOfTour.compareTo(end) <= 0)) {
+                ans.add(tour);
+            }
+        }
+        return ans;
+    }
+
+    public static ArrayList<Tour> searchByLength(ArrayList<Tour> tours , int length) {
+        if (tours == null || tours.isEmpty()) {
+            return null;
+        }
+        ArrayList<Tour> ans = new ArrayList<>();
+        for (Tour tour : tours) {
+            if (tour.getTourInformation().getTimeOfTour() == length) {
+                ans.add(tour);
+            }
+        }
+        return ans;
+    }
+
+    public static ArrayList<Tour> searchByVisitedPlace(ArrayList<Tour> tours , String area) {
+        if (tours == null || tours.isEmpty()) {
+            return null;
+        }
+        ArrayList<Tour> ans = new ArrayList<>();
+        for (Tour tour : tours) {
+            if (tour.getTourInformation().getVisitedPlaces().contains(area)) {
+                ans.add(tour);
+            }
+        }
+        return ans;
+    }
+
+    public static ArrayList<Tour> searchByBaseArea(ArrayList<Tour> tours , Area area) {
+        if (tours == null || tours.isEmpty()) {
+            return null;
+        }
+        ArrayList<Tour> ans = new ArrayList<>();
+        for (Tour tour : tours) {
+            if (tour.getTourInformation().getArea().equals(area)) {
+                ans.add(tour);
+            }
+        }
+        return ans;
+    }
+
+    public static ArrayList<Tour> searchByParticipants(ArrayList<Tour> tours , int minOfParticipants , int maxOfParticipants) {
+        if (tours == null || tours.isEmpty()) {
+            return null;
+        }
+        ArrayList<Tour> ans = new ArrayList<>();
+        for (Tour tour : tours) {
+            if (tour.getTourInformation().getMaxOfParticipants() <= maxOfParticipants && tour.getTourInformation().getMinOfParticipants() >= minOfParticipants) {
+                ans.add(tour);
+            }
+        }
+        return ans;
+    }
+
+    public static ArrayList<Tour> searchByPrice(ArrayList<Tour> tours  , double min , double max) {
+        if (tours == null || tours.isEmpty()) {
+            return null;
+        }
+        ArrayList<Tour> ans = new ArrayList<>();
+        for (Tour tour : tours) {
+            if (tour.getTourInformation().getPrice() < max && tour.getTourInformation().getPrice() > min) {
+                ans.add(tour);
+            }
+        }
+        return ans;
     }
 
     @Override

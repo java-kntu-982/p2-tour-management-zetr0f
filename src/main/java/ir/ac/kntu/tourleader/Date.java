@@ -13,6 +13,10 @@ public class Date {
     private int month;
     private int day;
 
+    public Date() {
+
+    }
+
     /**
      * the constructor with Date fields(year,month,day) input
      *
@@ -183,6 +187,16 @@ public class Date {
         } else {
             nextDate.day++;
         }
+    }
+
+    public int compareTo(Date x) {
+        if (this.year != x.year) {
+            return year - x.year;
+        }
+        if (this.month != x.month) {
+            return this.month - x.month;
+        }
+        return day - x.day;
     }
 
     /**

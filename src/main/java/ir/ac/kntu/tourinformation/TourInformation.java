@@ -2,7 +2,7 @@ package ir.ac.kntu.tourinformation;
 
 import ir.ac.kntu.area.Area;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -16,7 +16,11 @@ public class TourInformation {
     private TypeOfTravel typeOfTravel;
     private Area origin;
     private Area destination;
-    private String[] visitedPlaces;
+    private ArrayList<String> visitedPlaces;
+
+    public TourInformation() {
+
+    }
 
     public TourInformation(TourInformation tourInformation) {
         if (tourInformation != null) {
@@ -34,7 +38,7 @@ public class TourInformation {
     }
 
     public TourInformation(String name, int timeOfTour, Area area, double price, int minOfParticipants
-            , int maxOfParticipants, TypeOfTravel typeOfTravel, Area origin, Area destination, String[] visitedPlaces) {
+            , int maxOfParticipants, TypeOfTravel typeOfTravel, Area origin, Area destination,ArrayList<String> visitedPlaces) {
         setName(name);
         setTimeOfTour(timeOfTour);
         setArea(area);
@@ -130,14 +134,79 @@ public class TourInformation {
         this.destination = destination;
     }
 
-    public String[] getVisitedPlaces() {
-        return visitedPlaces.clone();
+    public ArrayList<String> getVisitedPlaces() {
+        return visitedPlaces;
     }
 
-    public void setVisitedPlaces(String[] visitedPlaces) {
-        if (visitedPlaces != null && visitedPlaces.length == this.visitedPlaces.length) {
+    public void setVisitedPlaces(ArrayList<String> visitedPlaces) {
+        if (visitedPlaces != null && visitedPlaces.size() == this.visitedPlaces.size()) {
             this.visitedPlaces = visitedPlaces;
         }
+    }
+
+    public static ArrayList<TourInformation> searchByTourLength(ArrayList<TourInformation> tourInformatics , int length) {
+        if (tourInformatics==null || tourInformatics.isEmpty()) {
+            return null;
+        }
+        ArrayList<TourInformation> ans = new ArrayList<>();
+        for (TourInformation tourInformation : tourInformatics) {
+            if (tourInformation.getTimeOfTour() == length) {
+                ans.add(tourInformation);
+            }
+        }
+        return ans;
+    }
+
+    public static ArrayList<TourInformation> searchByVisitAreas(ArrayList<TourInformation> tourInformatics , String area) {
+        if (tourInformatics==null || tourInformatics.isEmpty()) {
+            return null;
+        }
+        ArrayList<TourInformation> ans = new ArrayList<>();
+        for (TourInformation tourInformation : tourInformatics) {
+            if (tourInformation.getVisitedPlaces().contains(area)) {
+                ans.add(tourInformation);
+            }
+        }
+        return ans;
+    }
+
+    public static ArrayList<TourInformation> searchByBaseArea(ArrayList<TourInformation> tourInformatics , Area area) {
+        if (tourInformatics==null || tourInformatics.isEmpty()) {
+            return null;
+        }
+        ArrayList<TourInformation> ans = new ArrayList<>();
+        for (TourInformation tourInformation : tourInformatics) {
+            if (tourInformation.getArea().equals(area)) {
+                ans.add(tourInformation);
+            }
+        }
+        return ans;
+    }
+
+    public static ArrayList<TourInformation> searchByMinAndMaxOfParticipants(ArrayList<TourInformation> tourInformatics , int minOfParticipants , int maxOfParticipants) {
+        if (tourInformatics==null || tourInformatics.isEmpty()) {
+            return null;
+        }
+        ArrayList<TourInformation> ans = new ArrayList<>();
+        for (TourInformation tourInformation : tourInformatics) {
+            if (tourInformation.getMaxOfParticipants() <= maxOfParticipants && tourInformation.getMinOfParticipants() >= minOfParticipants) {
+                ans.add(tourInformation);
+            }
+        }
+        return ans;
+    }
+
+    public static ArrayList<TourInformation> searchByPrice(ArrayList<TourInformation> tourInformatics , double min , double max) {
+        if (tourInformatics==null || tourInformatics.isEmpty()) {
+            return null;
+        }
+        ArrayList<TourInformation> ans = new ArrayList<>();
+        for (TourInformation tourInformation : tourInformatics) {
+            if (tourInformation.getPrice() < max && tourInformation.getPrice() > min) {
+                ans.add(tourInformation);
+            }
+        }
+        return ans;
     }
 
     @Override
@@ -172,7 +241,7 @@ public class TourInformation {
                 ", typeOfTravel=" + typeOfTravel +
                 ", origin=" + origin +
                 ", destination=" + destination +
-                ", visitedPlaces=" + Arrays.toString(visitedPlaces) +
+                ", visitedPlaces=" + visitedPlaces +
                 '}';
     }
 }

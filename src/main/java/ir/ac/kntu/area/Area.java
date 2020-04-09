@@ -9,6 +9,10 @@ public class Area {
     private TypeOfArea typeOfArea;
     private String capital;
 
+    public Area() {
+
+    }
+
     public Area(String name, String capital) {
         setName(name);
         this.typeOfArea = TypeOfArea.FOREIGN;
