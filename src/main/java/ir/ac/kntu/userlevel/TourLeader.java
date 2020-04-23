@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class TourLeader extends User{
-    private static UserLevel tourLeaderUserLevel;
+    public static UserLevel tourLeaderUserLevel;
     private String id;
     private String firstName;
     private String lastName;
@@ -19,6 +19,9 @@ public class TourLeader extends User{
     private ArrayList<Area> areas = new ArrayList<>();
 
     public TourLeader(){
+        if (tourLeaderUserLevel == null) {
+            tourLeaderUserLevel = new UserLevel();
+        }
     }
 
     public TourLeader(String userName, String password, String email, String phoneNumber,String id, String firstName
@@ -31,6 +34,9 @@ public class TourLeader extends User{
         setDateOfRecruitment(new Date(dateOfRecruitment));
         setMaritalStatus(maritalStatus);
         setAreas(new ArrayList<>(areas));
+        if (tourLeaderUserLevel == null) {
+            tourLeaderUserLevel = new UserLevel();
+        }
     }
 
     public TourLeader(TourLeader tourLeader) {
@@ -42,7 +48,9 @@ public class TourLeader extends User{
         this.dateOfRecruitment = tourLeader.getDateOfRecruitment();
         this.areas = tourLeader.getAreas();
         this.maritalStatus = tourLeader.getMaritalStatus();
-
+        if (tourLeaderUserLevel == null) {
+            tourLeaderUserLevel = new UserLevel();
+        }
     }
 
     public String getId() {

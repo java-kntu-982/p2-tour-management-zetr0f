@@ -3,7 +3,7 @@ package ir.ac.kntu.userlevel;
 import java.util.Objects;
 
 public class Employee extends User {
-    private static UserLevel employeeUserLevel;
+    public static UserLevel employeeUserLevel;
     private Date dateOfBirth = new Date();
     private double salaryBase;
 
@@ -11,7 +11,9 @@ public class Employee extends User {
             , double salaryBase) {
         super(userName, password, email, phoneNumber);
         this.dateOfBirth = dateOfBirth;
-        this.salaryBase = salaryBase;
+        if (employeeUserLevel == null) {
+            employeeUserLevel = new UserLevel();
+        }        this.salaryBase = salaryBase;
     }
 
     public Date getDateOfBirth() {

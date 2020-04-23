@@ -1,5 +1,6 @@
 package ir.ac.kntu.userinterface;
 
+
 import ir.ac.kntu.ScannerSingleton;
 import ir.ac.kntu.area.Area;
 import ir.ac.kntu.maputil.MapUtil;
@@ -8,14 +9,16 @@ import ir.ac.kntu.tourinformation.TourInformation;
 import ir.ac.kntu.userlevel.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Scanner;
 
 
 public class UserInterface {
-    private static UserLevel currentUserLevel;
-    private static Admin admin;
-    private static ArrayList<Employee> employees;
-    private static ArrayList<Customer> customers;
+    private static UserLevel currentUserLevel = new UserLevel();
+    private static Admin admin = new Admin();
+    private static ArrayList<Employee> employees = new ArrayList<>();
+    private static ArrayList<Customer> customers = new ArrayList<>();
     public static Date today = new Date(1399 , 2, 4  );
     private static ArrayList<Area> areas  = new ArrayList<>();
     private static ArrayList<TourLeader> tourLeaders = new ArrayList<>();
@@ -24,6 +27,9 @@ public class UserInterface {
     private static ScannerSingleton input = ScannerSingleton.getInstance();
 
     private UserInterface() {
+        if (currentUserLevel == null) {
+            currentUserLevel = new UserLevel();
+        }
         if (admin == null) {
             admin = new Admin();
         }
@@ -74,31 +80,35 @@ public class UserInterface {
         password = input.nextLine();
         switch (choice) {
             case "1":
-                if (userName == admin.getUserName() && password == admin.getPassword()) {
+                if (userName.equals(admin.getUserName()) && password.equals(admin.getPassword())) {
+                    currentUserLevel.setRoles(new HashSet<>(Arrays.asList(Roles.values())));
                     handlerForMainMenu();
                 }
                 System.out.println("user or pass is incorrect or not exist");
                 handlerForLoginMenu();
             case "2":
                 for (int i = 0; i < employees.size(); i++) {
-                    if (userName == employees.get(i).getUserName() && password == employees.get(i).getPassword()) {
+                    if (userName.equals(employees.get(i).getUserName()) && password.equals(employees.get(i).getPassword())) {
                         handlerForMainMenu();
+                        currentUserLevel = new UserLevel((HashSet<Roles>) Employee.employeeUserLevel.getRoles().clone());
                     }
                 }
                 System.out.println("user or pass is incorrect or not exist");
                 handlerForLoginMenu();
             case "3":
                 for (int i = 0; i < customers.size(); i++) {
-                    if (userName == customers.get(i).getUserName() && password == customers.get(i).getPassword()) {
+                    if (userName.equals(customers.get(i).getUserName()) && password.equals(customers.get(i).getPassword())) {
                         handlerForMainMenu();
+                        currentUserLevel = new UserLevel((HashSet<Roles>) Customer.customerUserLevel.getRoles().clone());
                     }
                 }
                 System.out.println("user or pass is incorrect or not exist");
                 handlerForLoginMenu();
             case "4":
                 for (int i = 0; i < tourLeaders.size(); i++) {
-                    if (userName == tourLeaders.get(i).getUserName() && password == tourLeaders.get(i).getPassword()) {
+                    if (userName.equals(tourLeaders.get(i).getUserName()) && password.equals(tourLeaders.get(i).getPassword())) {
                         handlerForMainMenu();
+                        currentUserLevel = new UserLevel((HashSet<Roles>) TourLeader.tourLeaderUserLevel.getRoles().clone());
                     }
                 }
                 System.out.println("user or pass is incorrect or not exist");
@@ -123,6 +133,7 @@ public class UserInterface {
         System.out.println("4- map's menu");
         System.out.println("5- employee's menu");
         System.out.println("6- customer's menu");
+        System.out.println("7- admin's menu");
         System.out.println("L- logout");
         System.out.println("h- help");
         System.out.println("Please Enter Your Choice:\n");
@@ -146,9 +157,14 @@ public class UserInterface {
             case "5":
                 handlerForEmployeeMenu();
             case "6":
-//                handlerForCustomerMenu();
+                handlerForCustomerMenu();
+            case "7":
+                if (!currentUserLevel.getRoles().contains(Roles.ADMINEDIT)){
+                    break;
+                }
+                handlerForAdminMenu();
             case "L":
-                currentUserLevel = null;
+                currentUserLevel = new UserLevel();
                 handlerForLoginMenu();
             case "h":
                 System.out.println("we have 4 part , U can choose one of them, it's better to declare object bt this way" +
@@ -161,6 +177,149 @@ public class UserInterface {
                 pause();
                 handlerForMainMenu();
         }
+        pause();
+        handlerForMainMenu();
+    }
+
+    private static void handlerForCustomerMenu() {
+        clearScreen();
+        printCustomerMenuChoice();
+        handlerForCustomerMenuChoice();
+    }
+
+    private static void printCustomerMenuChoice() {
+        System.out.println("1- add");
+        System.out.println("2- remove");
+        System.out.println("3- edit");
+        System.out.println("M- Go To Main Menu\n\n");
+        System.out.println("Please Enter Your Choice:\n");
+    }
+
+    private static void handlerForCustomerMenuChoice() {
+        String choice = input.nextLine();
+        clearScreen();
+        String userName,password;
+        System.out.println("enter user name:");
+        userName = input.nextLine();
+        System.out.println("enter pass:");
+        password = input.nextLine();
+        switch (choice) {
+            case "1":
+                if (currentUserLevel.getRoles().contains(Roles.CUSTOMERADD)) {
+                    break;
+                }
+                String phoneNumber,email;
+                System.out.println("enter phone number:");
+                phoneNumber = input.nextLine();
+                System.out.println("enter email:");
+                email = input.nextLine();
+                customers.add(new Customer(userName,password,phoneNumber,email));
+            case "2":
+                if (currentUserLevel.getRoles().contains(Roles.CUSTOMERREMOVEOREDIT)) {
+                    break;
+                }
+                for (int i = 0; i < customers.size(); i++) {
+                    if (customers.get(i).getUserName().equals(userName) && customers.get(i).getPassword().equals(password)) {
+                        customers.remove(i);
+                        System.out.println("successful");
+                        pause();
+                        handlerForMainMenu();
+                    }
+                    System.out.println("not found");
+                    handlerForMainMenu();
+                }
+            case "3":
+                if (currentUserLevel.getRoles().contains(Roles.CUSTOMERREMOVEOREDIT)) {
+                    break;
+                }
+                //TODO
+            case "M":
+                handlerForMainMenu();
+                break;
+            default:
+                System.out.println("tour choice is not exist please try another");
+                pause();
+                handlerForEmployeeMenu();
+        }
+        pause();
+        handlerForEmployeeMenu();
+    }
+
+    private static void handlerForAdminMenu() {
+        clearScreen();
+        printAdminMenuChoice();
+        handlerForAdminMenuChoice();
+    }
+
+    private static void printAdminMenuChoice() {
+        System.out.println("1- edit username");
+        System.out.println("2- edit password");
+        System.out.println("3- edit employee user level");
+        System.out.println("4- edit tour leader user level");
+        System.out.println("5- edit customer user level");
+        System.out.println("M- Go To Main Menu\n\n");
+        System.out.println("Please Enter Your Choice:\n");
+    }
+
+    private static void handlerForAdminMenuChoice() {
+        String choice = input.nextLine();
+        clearScreen();
+        switch (choice) {
+            case "1":
+                System.out.println("enter your user name:");
+                admin.setUserName(input.nextLine());
+            case "2":
+                System.out.println("enter your password");
+                admin.setPassword(input.nextLine());
+            case "3":
+                System.out.println("all roles is :" + Arrays.toString(Roles.values()) + "\ncurrent employee rules is:" + Employee.employeeUserLevel.getRoles());
+                System.out.println("enter 1 for add and 2 for remove");
+                String choice1 = input.nextLine();
+                System.out.println("enter your choice from rules for remove or add");
+                if (choice1.equals("1")) {
+                    Employee.employeeUserLevel.getRoles().add(Roles.valueOf(input.nextLine().toUpperCase()));
+                    System.out.println("add success");
+                } else if (choice1.equals("2")){
+                    Employee.employeeUserLevel.getRoles().remove(Roles.valueOf(input.nextLine().toUpperCase()));
+                    System.out.println("remove success");
+                }
+                System.out.println("input is incorrect");
+            case "4":
+                System.out.println("all roles is :" + Arrays.toString(Roles.values()) + "\ncurrent employee rules is:" + TourLeader.tourLeaderUserLevel.getRoles());
+                System.out.println("enter 1 for add and 2 for remove");
+                String choice2 = input.nextLine();
+                System.out.println("enter your choice from rules for remove or add");
+                if (choice2.equals("1")) {
+                    TourLeader.tourLeaderUserLevel.getRoles().add(Roles.valueOf(input.nextLine().toUpperCase()));
+                    System.out.println("add success");
+                } else if (choice2.equals("2")){
+                    TourLeader.tourLeaderUserLevel.getRoles().remove(Roles.valueOf(input.nextLine().toUpperCase()));
+                    System.out.println("remove success");
+                }
+                System.out.println("input is incorrect");
+            case "5":
+                System.out.println("all roles is :" + Arrays.toString(Roles.values()) + "\ncurrent employee rules is:" + Customer.customerUserLevel.getRoles());
+                System.out.println("enter 1 for add and 2 for remove");
+                String choice3 = input.nextLine();
+                System.out.println("enter your choice from rules for remove or add");
+                if (choice3.equals("1")) {
+                    Customer.customerUserLevel.getRoles().add(Roles.valueOf(input.nextLine().toUpperCase()));
+                    System.out.println("add success");
+                } else if (choice3.equals("2")){
+                    Customer.customerUserLevel.getRoles().remove(Roles.valueOf(input.nextLine().toUpperCase()));
+                    System.out.println("remove success");
+                }
+                System.out.println("input is incorrect");
+            case "M":
+                handlerForMainMenu();
+                break;
+            default:
+                System.out.println("tour choice is not exist please try another");
+                pause();
+                handlerForAdminMenu();
+        }
+        pause();
+        handlerForAdminMenu();
     }
 
     private static void handlerForEmployeeMenu() {
@@ -173,12 +332,13 @@ public class UserInterface {
     private static void printEmployeeMenuChoice() {
         System.out.println("1- add");
         System.out.println("2- remove");
+        System.out.println("3- edit");
+        System.out.println("M- Go To Main Menu\n\n");
         System.out.println("Please Enter Your Choice:\n");
     }
 
     private static void handlerForEmployeeMenuChoice() {
         String choice = input.nextLine();
-        System.out.println();
         clearScreen();
         String userName,password;
         System.out.println("enter user name:");
@@ -187,6 +347,9 @@ public class UserInterface {
         password = input.nextLine();
         switch (choice) {
             case "1":
+                if (currentUserLevel.getRoles().contains(Roles.EMPLOYEEADD)) {
+                    break;
+                }
                 String phoneNumber,email;
                 System.out.println("enter phone number:");
                 phoneNumber = input.nextLine();
@@ -194,8 +357,11 @@ public class UserInterface {
                 email = input.nextLine();
                 employees.add(new Employee(userName, password, email, phoneNumber, new Date(1380,1,1), 12000));
             case "2":
+                if (currentUserLevel.getRoles().contains(Roles.EMPLOYEEREMOVEOREDIT)) {
+                    break;
+                }
                 for (int i = 0; i < employees.size(); i++) {
-                    if (employees.get(i).getUserName() == userName && employees.get(i).getPassword() == password) {
+                    if (employees.get(i).getUserName().equals(userName) && employees.get(i).getPassword().equals(password)) {
                         employees.remove(i);
                         System.out.println("successful");
                         pause();
@@ -204,6 +370,11 @@ public class UserInterface {
                     System.out.println("not found");
                     handlerForMainMenu();
                 }
+            case "3":
+                if (currentUserLevel.getRoles().contains(Roles.EMPLOYEEREMOVEOREDIT)) {
+                    break;
+                }
+                //TODO
             case "M":
                 handlerForMainMenu();
                 break;
@@ -212,6 +383,8 @@ public class UserInterface {
                 pause();
                 handlerForEmployeeMenu();
         }
+        pause();
+        handlerForEmployeeMenu();
     }
 
     private static void handlerForTourLeaderMenu() {
@@ -246,6 +419,9 @@ public class UserInterface {
                 }
                 break;
             case "2":
+                if (!currentUserLevel.getRoles().contains(Roles.TOURLEADERADD)) {
+                    break;
+                }
                 if (areas.isEmpty()) {
                     System.out.println("you don't have any area's , please create first");
                     pause();
@@ -315,6 +491,9 @@ public class UserInterface {
                 tourLeaders.add(tourLeader);
                 break;
             case "3":
+                if (!currentUserLevel.getRoles().contains(Roles.TOURLEADERREMOVEOREDIT)) {
+                    break;
+                }
                 if (tourLeaders.isEmpty()) {
                     System.out.println("no leader");
                     break;
@@ -325,6 +504,9 @@ public class UserInterface {
                 tourLeaders.removeIf(leader -> leader.getId().equals(id));
                 break;
             case "4":
+                if (!currentUserLevel.getRoles().contains(Roles.TOURLEADERREMOVEOREDIT)) {
+                    break;
+                }
                 if (tourLeaders.isEmpty()) {
                     System.out.println("no leader");
                     break;
@@ -554,14 +736,29 @@ public class UserInterface {
                 System.out.println(tours.toString());
                 break;
             case "3"://TODO
+                if (currentUserLevel.getRoles().contains(Roles.TOURINFORMATIONADD)) {
+                    break;
+                }
                 break;
             case "4"://TODO
+                if (currentUserLevel.getRoles().contains(Roles.TOURADD)) {
+                    break;
+                }
                 break;
             case "5"://TODO
+                if (currentUserLevel.getRoles().contains(Roles.TOURINFORMATIONREMOVEOREDIT)) {
+                    break;
+                }
                 break;
             case "6"://TODO
+                if (currentUserLevel.getRoles().contains(Roles.TOURREMOVEOREDIT)) {
+                    break;
+                }
                 break;
             case "7":
+                if (currentUserLevel.getRoles().contains(Roles.TOURREMOVEOREDIT)) {
+                    break;
+                }
                 if (tours.isEmpty()) {
                     System.out.println("please create one first :))");
                     break;
@@ -905,6 +1102,9 @@ public class UserInterface {
                 System.out.println(areas);
                 break;
             case "2":
+                if (currentUserLevel.getRoles().contains(Roles.AREAADD)) {
+                    break;
+                }
                 System.out.println( "name :");
                 name = input.nextLine();
                 System.out.println("capital(if it's a city enter the name again)");
@@ -916,8 +1116,14 @@ public class UserInterface {
                 }
                 break;
             case "3"://TODO
+                if (currentUserLevel.getRoles().contains(Roles.AREAREMOVEOREDIT)) {
+                    break;
+                }
                 break;
             case "4":
+                if (currentUserLevel.getRoles().contains(Roles.AREAREMOVEOREDIT)) {
+                    break;
+                }
                 System.out.println(areas);
                 System.out.println("enter name ");
                 name = input.nextLine();

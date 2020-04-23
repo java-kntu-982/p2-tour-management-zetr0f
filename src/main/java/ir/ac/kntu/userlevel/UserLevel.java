@@ -5,10 +5,12 @@ import java.util.HashSet;
 import java.util.Objects;
 
 public class UserLevel {
-    private HashSet<Roles> roles;
+    private HashSet<Roles> roles = new HashSet<>();
 //    private ArrayList<Roles> employeeArr = new ArrayList<>(Collection<>(Roles.TOURREMOVEOREDIT, Roles.AREAADD, Roles.AREAREMOVEOREDIT, Roles.TOURINFORMATIONREMOVEOREDIT, Roles.TOURINFORMATIONADD));
 //    private HashSet<Roles> employeeRoles = new HashSet<>();
 
+    public UserLevel(){
+    }
     public UserLevel(HashSet<Roles> roles) {
         this.roles = roles;
     }
