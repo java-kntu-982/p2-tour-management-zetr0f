@@ -1,8 +1,8 @@
 package ir.ac.kntu.tourinformation;
 
 import ir.ac.kntu.area.Area;
-import ir.ac.kntu.tourleader.Date;
-import ir.ac.kntu.tourleader.TourLeader;
+import ir.ac.kntu.userlevel.Date;
+import ir.ac.kntu.userlevel.TourLeader;
 
 import java.util.ArrayList;
 import java.util.Objects;

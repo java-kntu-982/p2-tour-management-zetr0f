@@ -5,15 +5,18 @@ import ir.ac.kntu.area.Area;
 import ir.ac.kntu.maputil.MapUtil;
 import ir.ac.kntu.tourinformation.Tour;
 import ir.ac.kntu.tourinformation.TourInformation;
-import ir.ac.kntu.tourleader.Date;
-import ir.ac.kntu.tourleader.TourLeader;
+import ir.ac.kntu.userlevel.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
 
 public class UserInterface {
-    public static Date today = new Date(1399 , 1, 21  );
+    private static UserLevel currentUserLevel;
+    private static Admin admin;
+    private static ArrayList<Employee> employees;
+    private static ArrayList<Customer> customers;
+    public static Date today = new Date(1399 , 2, 4  );
     private static ArrayList<Area> areas  = new ArrayList<>();
     private static ArrayList<TourLeader> tourLeaders = new ArrayList<>();
     private static ArrayList<TourInformation> primaryStructures = new ArrayList<>();
@@ -21,9 +24,93 @@ public class UserInterface {
     private static ScannerSingleton input = ScannerSingleton.getInstance();
 
     private UserInterface() {
+        if (admin == null) {
+            admin = new Admin();
+        }
+        if (employees == null) {
+            employees = new ArrayList<>();
+        }
+        if (customers == null) {
+            customers = new ArrayList<>();
+        }
+        if (today == null) {
+            today = new Date(1399 , 2, 4  );
+        }
+        if (areas == null) {
+            areas  = new ArrayList<>();
+        }
+        if (tourLeaders == null) {
+            tourLeaders = new ArrayList<>();
+        }
+        if (primaryStructures == null) {
+            primaryStructures = new ArrayList<>();
+        }
+        if (tours == null) {
+            tours = new ArrayList<>();
+        }
     }
 
-    public static void handlerForMainMenu(){
+    public static void handlerForLoginMenu(){
+        clearScreen();
+        printLoginMenuChoice();
+        handlerForLoginMenuChoice();
+    }
+
+    private static void printLoginMenuChoice() {
+        System.out.println("1- login as admin");
+        System.out.println("2- login as employee");
+        System.out.println("3- login as customer");
+        System.out.println("4- login as tour leader");
+        System.out.println("Please Enter Your Choice:\n");
+    }
+
+    private static void handlerForLoginMenuChoice() {
+        String choice = input.nextLine();
+        clearScreen();
+        String userName,password;
+        System.out.println("enter user name:");
+        userName = input.nextLine();
+        System.out.println("enter pass:");
+        password = input.nextLine();
+        switch (choice) {
+            case "1":
+                if (userName == admin.getUserName() && password == admin.getPassword()) {
+                    handlerForMainMenu();
+                }
+                System.out.println("user or pass is incorrect or not exist");
+                handlerForLoginMenu();
+            case "2":
+                for (int i = 0; i < employees.size(); i++) {
+                    if (userName == employees.get(i).getUserName() && password == employees.get(i).getPassword()) {
+                        handlerForMainMenu();
+                    }
+                }
+                System.out.println("user or pass is incorrect or not exist");
+                handlerForLoginMenu();
+            case "3":
+                for (int i = 0; i < customers.size(); i++) {
+                    if (userName == customers.get(i).getUserName() && password == customers.get(i).getPassword()) {
+                        handlerForMainMenu();
+                    }
+                }
+                System.out.println("user or pass is incorrect or not exist");
+                handlerForLoginMenu();
+            case "4":
+                for (int i = 0; i < tourLeaders.size(); i++) {
+                    if (userName == tourLeaders.get(i).getUserName() && password == tourLeaders.get(i).getPassword()) {
+                        handlerForMainMenu();
+                    }
+                }
+                System.out.println("user or pass is incorrect or not exist");
+                handlerForLoginMenu();
+            default:
+                System.out.println("tour choice is not exist please try another");
+                pause();
+                handlerForLoginMenu();
+        }
+    }
+
+    private static void handlerForMainMenu(){
         clearScreen();
         printMainMenuChoice();
         handlerForMainMenuChoice();
@@ -34,6 +121,9 @@ public class UserInterface {
         System.out.println("2- tour's menu");
         System.out.println("3- area's menu");
         System.out.println("4- map's menu");
+        System.out.println("5- employee's menu");
+        System.out.println("6- customer's menu");
+        System.out.println("L- logout");
         System.out.println("h- help");
         System.out.println("Please Enter Your Choice:\n");
     }
@@ -53,6 +143,13 @@ public class UserInterface {
             case "4":
                 handlerForMapMenu();
                 break;
+            case "5":
+                handlerForEmployeeMenu();
+            case "6":
+//                handlerForCustomerMenu();
+            case "L":
+                currentUserLevel = null;
+                handlerForLoginMenu();
             case "h":
                 System.out.println("we have 4 part , U can choose one of them, it's better to declare object bt this way" +
                         "\nArea/place -> Leader -> TourInformation -> PrimaryStructures");
@@ -63,6 +160,57 @@ public class UserInterface {
                 System.out.println("tour choice is not exist please try another");
                 pause();
                 handlerForMainMenu();
+        }
+    }
+
+    private static void handlerForEmployeeMenu() {
+        clearScreen();
+        printEmployeeMenuChoice();
+        handlerForEmployeeMenuChoice();
+    }
+
+
+    private static void printEmployeeMenuChoice() {
+        System.out.println("1- add");
+        System.out.println("2- remove");
+        System.out.println("Please Enter Your Choice:\n");
+    }
+
+    private static void handlerForEmployeeMenuChoice() {
+        String choice = input.nextLine();
+        System.out.println();
+        clearScreen();
+        String userName,password;
+        System.out.println("enter user name:");
+        userName = input.nextLine();
+        System.out.println("enter pass:");
+        password = input.nextLine();
+        switch (choice) {
+            case "1":
+                String phoneNumber,email;
+                System.out.println("enter phone number:");
+                phoneNumber = input.nextLine();
+                System.out.println("enter email:");
+                email = input.nextLine();
+                employees.add(new Employee(userName, password, email, phoneNumber, new Date(1380,1,1), 12000));
+            case "2":
+                for (int i = 0; i < employees.size(); i++) {
+                    if (employees.get(i).getUserName() == userName && employees.get(i).getPassword() == password) {
+                        employees.remove(i);
+                        System.out.println("successful");
+                        pause();
+                        handlerForMainMenu();
+                    }
+                    System.out.println("not found");
+                    handlerForMainMenu();
+                }
+            case "M":
+                handlerForMainMenu();
+                break;
+            default:
+                System.out.println("tour choice is not exist please try another");
+                pause();
+                handlerForEmployeeMenu();
         }
     }
 
@@ -264,7 +412,7 @@ public class UserInterface {
                 System.out.println("enter first name:");
                 System.out.println(TourLeader.searchByFirstName(tourLeaders, input.nextLine()));
                 break;
-            case "2"://TODO
+            case "2":
                 System.out.println("enter last name:");
                 System.out.println(TourLeader.searchByLastName(tourLeaders, input.nextLine()));
                 break;

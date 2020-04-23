@@ -12,21 +12,23 @@ public class ScannerSingleton {
     /**
      * declaring scanner and scannerSingleton
      */
-    private static ScannerSingleton iNSTANCE;
+    private static ScannerSingleton instance;
     private static Scanner scanner;
 
     private ScannerSingleton() {
-        scanner = new Scanner(System.in);
+        if (scanner == null) {
+            scanner = new Scanner(System.in);
+        }
     }
 
     /**
      * @return scannerSingleton of class
      */
     public static ScannerSingleton getInstance() {
-        if (iNSTANCE == null){
-            iNSTANCE = new ScannerSingleton();
+        if (instance == null){
+            instance = new ScannerSingleton();
         }
-        return iNSTANCE;
+        return instance;
     }
 
     /**

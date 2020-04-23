@@ -1,4 +1,4 @@
-package ir.ac.kntu.tourleader;
+package ir.ac.kntu.userlevel;
 
 
 import ir.ac.kntu.area.Area;
@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public class TourLeader {
+public class TourLeader extends User{
+    private static UserLevel tourLeaderUserLevel;
     private String id;
     private String firstName;
     private String lastName;
@@ -20,7 +21,9 @@ public class TourLeader {
     public TourLeader(){
     }
 
-    public TourLeader(String id, String firstName, String lastName, Date dateOfBirth, Date dateOfRecruitment, Boolean maritalStatus, ArrayList<Area> areas) {
+    public TourLeader(String userName, String password, String email, String phoneNumber,String id, String firstName
+            , String lastName, Date dateOfBirth, Date dateOfRecruitment, Boolean maritalStatus, ArrayList<Area> areas) {
+        super(userName,password,email,phoneNumber);
         setId(id);
         setFirstName(firstName);
         setLastName(lastName);
@@ -31,7 +34,8 @@ public class TourLeader {
     }
 
     public TourLeader(TourLeader tourLeader) {
-        this.id = tourLeader.id;
+        super(tourLeader.getUserName(),tourLeader.getPassword(),tourLeader.getEmail(),tourLeader.getPhoneNumber());
+        this.id = tourLeader.getId();
         this.firstName = tourLeader.getFirstName();
         this.lastName = tourLeader.getLastName();
         this.dateOfBirth = tourLeader.getDateOfBirth();
@@ -100,6 +104,9 @@ public class TourLeader {
     }
 
     public void setDateOfRecruitment(Date dateOfRecruitment) {
+        if (dateOfRecruitment == null) {
+            dateOfRecruitment = new Date(0,1,1);
+        }
         if (dateOfBirth.getYear() + 18 <= dateOfRecruitment.getYear()) {
             this.dateOfRecruitment = dateOfRecruitment;
         }
@@ -187,7 +194,7 @@ public class TourLeader {
 
     @Override
     public String toString() {
-        return "TourLeader{" +
+        return "TourLeader{" + super.toString() +
                 "id='" + id + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +

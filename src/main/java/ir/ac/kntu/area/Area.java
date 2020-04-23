@@ -10,7 +10,6 @@ public class Area {
     private String capital;
 
     public Area() {
-
     }
 
     public Area(String name, String capital) {
